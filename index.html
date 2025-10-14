@@ -15,7 +15,7 @@
             --surface-color: #FFFFFF;
             --text-color: #1d1d1f;
             --text-secondary-color: #6e6e73;
-            --border-color: #EAEAEB; /* A slightly lighter border */
+            --border-color: #EAEAEB; 
         }
 
         * { box-sizing: border-box; }
@@ -42,7 +42,6 @@
 
         header {
             padding: 20px 20px 12px;
-            /* FIX: Replaced border with a subtle shadow for a modern, floating effect */
             border-bottom: 1px solid transparent; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: flex;
@@ -76,7 +75,6 @@
         .vendor-card p { margin: 0; font-size: 15px; opacity: 0.9; }
 
         /* Menu Item */
-        /* FIX: Using a lighter border color for a softer look */
         .menu-item { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #F1F1F2; }
         .menu-item:first-child { padding-top: 0; }
         .menu-item-info { flex-grow: 1; padding-right: 16px; }
@@ -107,11 +105,11 @@
         #order-summary { background-color: #fff; padding: 20px; border-radius: 18px; margin-bottom: 24px; }
         #order-summary p { display: flex; justify-content: space-between; margin: 0 0 12px; font-size: 16px; }
         #order-summary p:last-child { margin-bottom: 0; }
-        /* FIX: Replaced dashed line with a clean, solid one */
+
         #order-summary hr { border: none; border-top: 1px solid var(--border-color); margin: 16px 0; }
-        /* FIX: Removed the line under the h3 in favor of clean spacing */
+ 
         .vendor-group h3 { font-size: 16px; margin: 16px 0 10px; font-weight: 700; padding-bottom: 0; }
-        /* FIX: Reduced border width for a more elegant feel */
+
         .delivery-option { display: flex; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
         .delivery-option.selected { border-width: 2px; border-color: var(--primary-dark); background-color: #FFF8E1; }
         .delivery-option .icon { margin-right: 16px; display: flex; align-items: center; }
