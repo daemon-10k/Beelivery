@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beelivery</title>
+    <link rel="icon" href="logo.jpeg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #FFC107;
+            --primary-dark: #FFA000;
+            --background-color: #F9F9FB;
+            --surface-color: #FFFFFF;
+            --text-color: #1d1d1f;
+            --text-secondary-color: #6e6e73;
+            --border-color: #EAEAEB; /* A slightly lighter border */
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        #app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: var(--surface-color);
+            min-height: 100vh;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        header {
+            padding: 20px 20px 12px;
+            /* FIX: Replaced border with a subtle shadow for a modern, floating effect */
+            border-bottom: 1px solid transparent; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        header .logo { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        header .logo img { height: 30px; width: 30px; }
+        
+        main { padding: 32px 20px 120px; flex-grow: 1; }
+        
+        .page-title { font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .page-subtitle { font-size: 16px; color: var(--text-secondary-color); margin-top: 0; margin-bottom: 32px; }
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; margin-top: 32px; }
+
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Vendor Card */
+        .vendor-card { border-radius: 20px; margin-bottom: 20px; overflow: hidden; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
+        .vendor-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .vendor-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+        .vendor-card .info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
+        .vendor-card h3 { margin: 0 0 4px; font-size: 20px; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+        .vendor-card p { margin: 0; font-size: 15px; opacity: 0.9; }
+
+        /* Menu Item */
+        /* FIX: Using a lighter border color for a softer look */
+        .menu-item { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #F1F1F2; }
+        .menu-item:first-child { padding-top: 0; }
+        .menu-item-info { flex-grow: 1; padding-right: 16px; }
+        .menu-item h4 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
+        .menu-item p { margin: 0; color: var(--text-color); font-size: 15px; }
+        .quantity-selector { display: flex; align-items: center; }
+        .quantity-btn { background-color: var(--background-color); border: 1px solid var(--border-color); border-radius: 50%; width: 34px; height: 34px; font-size: 22px; font-weight: 400; cursor: pointer; transition: all 0.2s; color: var(--text-color); line-height: 32px; }
+        .quantity-btn:hover { background-color: #e9ecef; }
+        .quantity-display { margin: 0 12px; font-weight: 600; font-size: 17px; min-width: 22px; text-align: center; }
+
+        /* Buttons & Forms */
+        .button { display: block; width: 100%; padding: 18px; background: var(--primary-color); color: black; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; text-align: center; cursor: pointer; text-decoration: none; margin-top: 12px; transition: all 0.2s; }
+        .button:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
+        .button.secondary { background: var(--border-color); color: var(--text-color); }
+        .button.secondary:hover { background: #dee2e6; }
+        /* FIX: Using the main border color for consistency */
+        input[type="text"], input[type="number"] { width: 100%; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-color); border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; background-color: #F5F5F7; transition: all 0.2s; }
+        input:focus { outline: none; border-color: var(--primary-dark); box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2); background-color: #fff; }
+        
+        /* Floating Cart & Toast Notification */
+        .floating-cart-button { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; padding: 18px; background: var(--text-color); color: white; border-radius: 16px; font-size: 16px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: bottom 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 50; }
+        .floating-cart-button.visible { bottom: 24px; }
+        
+        #toast-notification { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; padding: 16px; background-color: #e63946; color: white; border-radius: 12px; text-align: center; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.15); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; }
+        #toast-notification.visible { bottom: 100px; }
+
+        /* Checkout Page */
+        #order-summary { background-color: #fff; padding: 20px; border-radius: 18px; margin-bottom: 24px; }
+        #order-summary p { display: flex; justify-content: space-between; margin: 0 0 12px; font-size: 16px; }
+        #order-summary p:last-child { margin-bottom: 0; }
+        /* FIX: Replaced dashed line with a clean, solid one */
+        #order-summary hr { border: none; border-top: 1px solid var(--border-color); margin: 16px 0; }
+        /* FIX: Removed the line under the h3 in favor of clean spacing */
+        .vendor-group h3 { font-size: 16px; margin: 16px 0 10px; font-weight: 700; padding-bottom: 0; }
+        /* FIX: Reduced border width for a more elegant feel */
+        .delivery-option { display: flex; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+        .delivery-option.selected { border-width: 2px; border-color: var(--primary-dark); background-color: #FFF8E1; }
+        .delivery-option .icon { margin-right: 16px; display: flex; align-items: center; }
+        .delivery-option .icon svg { width: 24px; height: 24px; }
+        .delivery-option p { margin: 2px 0 0; font-size: 14px; color: var(--text-secondary-color);}
+        .delivery-option h4 { margin: 0; font-size: 16px; font-weight: 600;}
+        
+        /* Success Screen */
+        .success-screen { text-align: center; padding-top: 40px; }
+        .success-screen .icon { font-size: 80px; }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <header>
+            <div class="logo">
+                <img src="logo.jpeg" alt="Beelivery Logo">
+                Beelivery
+            </div>
+        </header>
+        <main id="app-content"></main>
+        <div id="floating-cart" class="floating-cart-button"></div>
+        <div id="toast-notification"></div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwDLXALJ_TK7kp6YstmmOGrfN6vJJVs54MmSX_l6ZiJtipi56UHm01jU-R10_Sz9WI6g/exec';
+        const appContent = document.getElementById('app-content');
+        const floatingCartButton = document.getElementById('floating-cart');
+        const toastNotification = document.getElementById('toast-notification');
+        let cart = {}; 
+
+        const vendors = [
+            { name: 'Dapur Penyet', category: 'Authentic Indonesian', imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=700' }, 
+            { name: 'Nara Kitchen', category: 'Classic Nasi Campur', imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=700' },
+            { name: 'M Kubik', category: 'Traditional Soto & Gudeg', imageUrl: 'https://images.unsplash.com/photo-1681378128359-a5c2492a3535?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287' },
+            { name: 'Dapur Nieta', category: 'Ayam Geprek Specialist', imageUrl: 'https://images.unsplash.com/photo-1696340034876-6245523babfa?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287' }, 
+            { name: 'JJS', category: 'Fresh Juices & Snacks', imageUrl: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=700' }
+        ];
+
+        function renderPage(content) {
+            appContent.innerHTML = `<div class="fade-in">${content}</div>`;
+        }
+
+        function renderVendorList() {
+            updateFloatingCart();
+            let content = `
+                <div class="page-title">Welcome!</div>
+                <div class="page-subtitle">Your campus canteen, delivered.</div>`;
+            vendors.forEach(vendor => {
+                content += `
+                    <div class="vendor-card" onclick="renderMenu('${vendor.name}')">
+                        <img src="${vendor.imageUrl}" alt="${vendor.name}">
+                        <div class="info"><h3>${vendor.name}</h3><p>${vendor.category}</p></div>
+                    </div>`;
+            });
+            renderPage(content);
+        }
+
+        function showToast(message) {
+            toastNotification.innerText = message;
+            toastNotification.classList.add('visible');
+            setTimeout(() => {
+                toastNotification.classList.remove('visible');
+            }, 3000);
+        }
+
+        function updateCart(vendorName, itemName, change, price) {
+            let totalItems = 0;
+            for (const name in cart) { totalItems += cart[name].quantity; }
+            if (change > 0 && totalItems >= 3) {
+                showToast("Maximum of 3 items per order.");
+                return;
+            }
+            
+            const cleanItemName = itemName.replace(/[^a-zA-Z0-9]/g, '');
+            if (!cart[itemName]) { cart[itemName] = { name: itemName, quantity: 0, price: price, vendor: vendorName }; }
+            cart[itemName].quantity += change;
+            if (cart[itemName].quantity <= 0) { delete cart[itemName]; }
+            
+            const displayElement = document.getElementById(`qty-${cleanItemName}`);
+            if (displayElement) { displayElement.innerText = cart[itemName] ? cart[itemName].quantity : 0; }
+            updateFloatingCart();
+        }
+        
+        function renderMenu(vendorName) {
+            renderPage(`<div style="text-align: center;"><p>Loading menu...</p></div>`);
+            
+            fetch(`${GOOGLE_SCRIPT_URL}?vendor=${vendorName}`)
+                .then(res => res.json())
+                .then(menuItems => {
+                    if (menuItems.error) {
+                        renderPage(`<h2>Error</h2><p>${menuItems.error}</p><button class="button secondary" onclick="renderVendorList()">Back</button>`);
+                        return;
+                    }
+                    let menuHTML = '';
+                    menuItems.forEach(item => {
+                        const cleanItemName = item.name.replace(/[^a-zA-Z0-9]/g, '');
+                        const currentQuantity = cart[item.name] ? cart[item.name].quantity : 0;
+                        menuHTML += `
+                            <div class="menu-item">
+                                <div class="menu-item-info"><h4>${item.name}</h4><p>Rp ${parseInt(item.price).toLocaleString('id-ID')}</p></div>
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', -1, ${item.price})">-</button>
+                                    <span class="quantity-display" id="qty-${cleanItemName}">${currentQuantity}</span>
+                                    <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', 1, ${item.price})">+</button>
+                                </div>
+                            </div>`;
+                    });
+                    renderPage(`
+                        <h2 class="page-title">${vendorName}</h2>
+                        <div id="menu-list">${menuHTML}</div>
+                        <button class="button secondary" style="margin-top: 24px;" onclick="renderVendorList()">‹ All Vendors</button>`);
+                });
+        }
+        
+        function renderCheckout() {
+            let orderSummaryHTML = '';
+            let subtotal = 0;
+            const vendorGroups = {};
+
+            for (const itemName in cart) {
+                const item = cart[itemName];
+                if (item.quantity > 0) {
+                    if (!vendorGroups[item.vendor]) vendorGroups[item.vendor] = [];
+                    vendorGroups[item.vendor].push(item);
+                }
+            }
+
+            for (const vendorName in vendorGroups) {
+                orderSummaryHTML += `<div class="vendor-group"><h3>${vendorName}</h3>`;
+                vendorGroups[vendorName].forEach(item => {
+                    const itemTotal = item.quantity * item.price;
+                    subtotal += itemTotal;
+                    orderSummaryHTML += `<p><span>${item.quantity}x ${item.name}</span><span>Rp ${itemTotal.toLocaleString('id-ID')}</span></p>`;
+                });
+                orderSummaryHTML += `</div>`;
+            }
+
+            renderPage(`
+                <h2 class="page-title">Confirm Order</h2>
+                <div id="order-summary">${orderSummaryHTML}<hr><div id="service-fee-line"></div><p><strong>Total:</strong><strong id="final-total"></strong></p></div>
+                <h3 class="section-title">Delivery Speed</h3>
+                <div id="delivery-options">
+                    <label class="delivery-option" for="standard-deliv">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg></div>
+                        <div><h4>Standard</h4><p>~15-20 mins</p></div>
+                        <input type="radio" id="standard-deliv" name="priority" value="Standard" checked>
+                    </label>
+                    <label class="delivery-option" for="priority-deliv">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="m14.4 6-1.4 1.4 2.6 2.6H8v2h7.6l-2.6 2.6L14.4 16l5-5-5-5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></div>
+                        <div><h4>Priority</h4><p>~10-15 mins (+Rp 4,000)</p></div>
+                        <input type="radio" id="priority-deliv" name="priority" value="Priority">
+                    </label>
+                    <label class="delivery-option" for="express-deliv">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM15 11h-2V7h-2v4H9l3 3 3-3z"/></svg></div>
+                        <div><h4>Express</h4><p>&lt; 10 mins (+Rp 8,000)</p></div>
+                        <input type="radio" id="express-deliv" name="priority" value="Express">
+                    </label>
+                </div>
+                <h3 class="section-title">Your Details</h3>
+                <form id="checkout-form">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="text" name="location" placeholder="Location (e.g., A0801)" required>
+                    <div id="form-status" style="margin-top:10px; text-align:center;"></div>
+                    <button type="submit" class="button">Submit Order & Pay</button>
+                </form>
+                <button class="button secondary" onclick="renderVendorList()">‹ Cancel Order</button>
+            `);
+            
+            const deliveryOptions = document.querySelectorAll('.delivery-option');
+            let currentTotal = 0;
+
+            function calculateAndDisplayTotal() {
+                let serviceFee = 7000;
+                const selectedOption = document.querySelector('input[name="priority"]:checked').value;
+                if (selectedOption === 'Priority') serviceFee += 4000;
+                else if (selectedOption === 'Express') serviceFee += 8000;
+                const finalTotal = subtotal + serviceFee;
+                document.getElementById('service-fee-line').innerHTML = `<p><span>Service Fee</span><span>Rp ${serviceFee.toLocaleString('id-ID')}</span></p>`;
+                document.getElementById('final-total').innerText = `Rp ${finalTotal.toLocaleString('id-ID')}`;
+                return finalTotal;
+            }
+
+            deliveryOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    deliveryOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    currentTotal = calculateAndDisplayTotal();
+                });
+            });
+
+            document.querySelector('.delivery-option').classList.add('selected');
+            currentTotal = calculateAndDisplayTotal();
+            document.getElementById('checkout-form').addEventListener('submit', (e) => handleFormSubmit(e, currentTotal));
+        }
+        
+        function updateFloatingCart() {
+            let subtotal = 0;
+            let itemCount = 0;
+            for (const name in cart) {
+                itemCount += cart[name].quantity;
+                subtotal += cart[name].quantity * cart[name].price;
+            }
+            if (itemCount > 0) {
+                floatingCartButton.innerText = `View Cart (${itemCount}) • Rp ${subtotal.toLocaleString('id-ID')}`;
+                floatingCartButton.classList.add('visible');
+                floatingCartButton.onclick = () => renderCheckout();
+            } else {
+                floatingCartButton.classList.remove('visible');
+            }
+        }
+        
+        function handleFormSubmit(e, finalTotal) {
+            e.preventDefault();
+            const formStatus = document.getElementById('form-status');
+            formStatus.innerText = 'Submitting your order...';
+
+            const formData = new FormData(e.target);
+            const name = formData.get('name');
+            const location = formData.get('location');
+            const priority = document.querySelector('input[name="priority"]:checked').value;
+
+            let itemsString = '';
+            let vendorsString = '';
+            const vendorSet = new Set();
+            for (const itemName in cart) {
+                if (cart[itemName].quantity > 0) { 
+                    itemsString += `(${cart[itemName].vendor}) ${cart[itemName].quantity}x ${itemName}; `;
+                    vendorSet.add(cart[itemName].vendor);
+                }
+            }
+            itemsString = itemsString.slice(0, -2);
+            vendorsString = Array.from(vendorSet).join(', ');
+            
+            const orderDetails = {
+                vendor: vendorsString, items: itemsString, name: name,
+                location: location, total: finalTotal, priority: priority
+            };
+
+            fetch(GOOGLE_SCRIPT_URL, { 
+                method: 'POST', body: JSON.stringify(orderDetails), 
+                headers: { 'Content-Type': 'text/plain;charset-utf-8' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    cart = {};
+                    updateFloatingCart();
+                    renderPage(`
+                        <div class="success-screen">
+                            <div class="icon">🎉</div>
+                            <h2 class="page-title">Order Submitted!</h2>
+                            <p class="page-subtitle" style="margin-bottom: 24px;">Your order (#${data.orderid}) has been sent to our team.</p>
+                            <a href="https://wa.me/+6281110002171" class="button secondary" target="_blank">Contact Support</a>
+                            <button class="button" onclick="renderVendorList()">Place Another Order</button>
+                        </div>`);
+                } else { throw new Error(data.message || 'An unknown error in the script.'); }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                formStatus.innerText = 'An error occurred. Please try again.';
+            });
+        }
+
+        window.onload = renderVendorList;
+    </script>
+</body>
+</html>
