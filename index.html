@@ -136,11 +136,57 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwDLXALJ_TK7kp6YstmmOGrfN6vJJVs54MmSX_l6ZiJtipi56UHm01jU-R10_Sz9WI6g/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsIfGxBDNPYVFjCgwfjsYwGvElnbVDFjtH2beRl_3i8bFg9xriHRyDwx4yv8lPR66t5A/exec';
         const appContent = document.getElementById('app-content');
         const floatingCartButton = document.getElementById('floating-cart');
         const toastNotification = document.getElementById('toast-notification');
+        
+        // FIX 1: Defined this globally so all functions can access it
+        let currentBatchName = ""; 
         let cart = {}; 
+
+        const batchSchedule = [
+            // { batchName: "Batch 1 (10:00 AM)", orderStart: "09:15", orderEnd: "09:45" },
+            { batchName: "Batch 2 (12:00 PM)", orderStart: "11:15", orderEnd: "11:45" },
+            { batchName: "Batch 3 (02:00 PM)", orderStart: "13:15", orderEnd: "13:45" },
+            { batchName: "Late Night Test Batch", orderStart: "23:00", orderEnd: "24:00" }
+        ];
+
+        function getCurrentBatchStatus() {
+            const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+
+            for (const batch of batchSchedule) {
+                const [startH, startM] = batch.orderStart.split(':').map(Number);
+                const [endH, endM] = batch.orderEnd.split(':').map(Number);
+                const startTime = startH * 60 + startM;
+                const endTime = endH * 60 + endM;
+
+                if (currentTime >= startTime && currentTime < endTime) {
+                    const minutesLeft = endTime - currentTime;
+                    return {
+                        state: "OPEN",
+                        batchName: batch.batchName,
+                        closesIn: `${minutesLeft} minutes`
+                    };
+                }
+
+                if (currentTime < startTime) {
+                    const minutesUntilOpen = startTime - currentTime;
+                    return {
+                        state: "CLOSED",
+                        nextBatchName: batch.batchName,
+                        opensIn: `${minutesUntilOpen} minutes`
+                    };
+                }
+            }
+
+            return {
+                state: "AFTER_HOURS",
+                nextBatchName: batchSchedule[0].batchName, 
+                opensIn: "Tomorrow"
+            };
+        }
 
         const vendors = [
             { name: 'Dapur Penyet', category: 'Authentic Indonesian', imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=700' }, 
@@ -154,14 +200,17 @@
             appContent.innerHTML = `<div class="fade-in">${content}</div>`;
         }
 
-        function renderVendorList() {
+        function renderVendorList(batchName, closesIn) {
             updateFloatingCart();
             let content = `
-                <div class="page-title">Welcome!</div>
-                <div class="page-subtitle">Your campus canteen, delivered.</div>`;
+                <div class="page-title">Order for the ${batchName}!</div>
+                <div class="page-subtitle" style="color: #e63946; font-weight: 600;">
+                    Ordering closes in: ${closesIn}
+                </div>`;
+                
             vendors.forEach(vendor => {
                 content += `
-                    <div class="vendor-card" onclick="renderMenu('${vendor.name}')">
+                    <div class="vendor-card" onclick="renderMenu('${vendor.name}', false)"> 
                         <img src="${vendor.imageUrl}" alt="${vendor.name}">
                         <div class="info"><h3>${vendor.name}</h3><p>${vendor.category}</p></div>
                     </div>`;
@@ -192,10 +241,12 @@
             
             const displayElement = document.getElementById(`qty-${cleanItemName}`);
             if (displayElement) { displayElement.innerText = cart[itemName] ? cart[itemName].quantity : 0; }
-            updateFloatingCart();
+            
+            // FIX 2: Removed 'batchName' argument. It now updates purely based on cart state.
+            updateFloatingCart(); 
         }
         
-        function renderMenu(vendorName) {
+        function renderMenu(vendorName, isClosed = false) {
             renderPage(`<div style="text-align: center;"><p>Loading menu...</p></div>`);
             
             fetch(`${GOOGLE_SCRIPT_URL}?vendor=${vendorName}`)
@@ -209,24 +260,36 @@
                     menuItems.forEach(item => {
                         const cleanItemName = item.name.replace(/[^a-zA-Z0-9]/g, '');
                         const currentQuantity = cart[item.name] ? cart[item.name].quantity : 0;
+
+                        const disabledAttribute = isClosed ? 'disabled' : '';
+                        const disabledClass = isClosed ? 'style="opacity: 0.5; cursor: not-allowed;"' : '';
+
                         menuHTML += `
-                            <div class="menu-item">
-                                <div class="menu-item-info"><h4>${item.name}</h4><p>Rp ${parseInt(item.price).toLocaleString('id-ID')}</p></div>
-                                <div class="quantity-selector">
-                                    <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', -1, ${item.price})">-</button>
-                                    <span class="quantity-display" id="qty-${cleanItemName}">${currentQuantity}</span>
-                                    <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', 1, ${item.price})">+</button>
-                                </div>
-                            </div>`;
-                    });
-                    renderPage(`
-                        <h2 class="page-title">${vendorName}</h2>
-                        <div id="menu-list">${menuHTML}</div>
-                        <button class="button secondary" style="margin-top: 24px;" onclick="renderVendorList()">‹ All Vendors</button>`);
+                        <div class="menu-item" ${disabledClass}>
+                            <div class="menu-item-info"><h4>${item.name}</h4><p>Rp ${parseInt(item.price).toLocaleString('id-ID')}</p></div>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', -1, ${item.price})" ${disabledAttribute}>-</button>
+                                <span class="quantity-display" id="qty-${cleanItemName}">${currentQuantity}</span>
+                                <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', 1, ${item.price})" ${disabledAttribute}>+</button>
+                            </div>
+                        </div>`;
                 });
+
+                renderPage(`
+                    <h2 class="page-title">${vendorName}</h2>
+                    <div id="menu-list">${menuHTML}</div>
+                    <button class="button secondary" style="margin-top: 24px;" onclick="initializeApp()">‹ All Vendors</button>`);
+                
+                if (!isClosed) {
+                    updateFloatingCart();
+                }
+            });
         }
         
         function renderCheckout() {
+            // Using the global currentBatchName
+            let batchName = currentBatchName;
+            
             let orderSummaryHTML = '';
             let subtotal = 0;
             const vendorGroups = {};
@@ -271,14 +334,14 @@
                     </label>
                 </div>
                 <h3 class="section-title">Your Details</h3>
-                <p style="text-align: center; color: var(--text-secondary-color); font-size: 14px; margin-top: -16px; margin-bottom: 24px;">To ensure fast delivery for everyone, each order is limited to 3 items. Thanks for your understanding!</p>
+                <p style="text-align: center; color: var(--text-secondary-color); font-size: 14px; margin-top: 0px; margin-bottom: 24px;">To ensure fast delivery for everyone, each order is limited to 3 items. Thanks for your understanding!</p>
                 <form id="checkout-form">
                     <input type="text" name="name" placeholder="Your Name" required>
                     <input type="text" name="location" placeholder="Location (e.g., A0801)" required>
                     <div id="form-status" style="margin-top:10px; text-align:center;"></div>
                     <button type="submit" class="button">Submit Order & Pay</button>
                 </form>
-                <button class="button secondary" onclick="renderVendorList()">‹ Cancel Order</button>
+                <button class="button secondary" onclick="renderVendorList('${batchName}', 'Calculating...')">‹ Cancel Order</button>
             `);
             
             const deliveryOptions = document.querySelectorAll('.delivery-option');
@@ -308,7 +371,9 @@
             document.getElementById('checkout-form').addEventListener('submit', (e) => handleFormSubmit(e, currentTotal));
         }
         
+        // FIX 3: Removed parameters. It now accesses 'cart' and 'currentBatchName' globally.
         function updateFloatingCart() {
+            const btn = document.getElementById('floating-cart');
             let subtotal = 0;
             let itemCount = 0;
             for (const name in cart) {
@@ -316,11 +381,13 @@
                 subtotal += cart[name].quantity * cart[name].price;
             }
             if (itemCount > 0) {
-                floatingCartButton.innerText = `View Cart (${itemCount}) • Rp ${subtotal.toLocaleString('id-ID')}`;
-                floatingCartButton.classList.add('visible');
-                floatingCartButton.onclick = () => renderCheckout();
+                btn.innerText = `View Cart (${itemCount}) • Rp ${subtotal.toLocaleString('id-ID')}`;
+                btn.classList.add('visible');
+                
+                // FIX 4: Ensures it sends the global currentBatchName to checkout
+                btn.onclick = () => renderCheckout();
             } else {
-                floatingCartButton.classList.remove('visible');
+                btn.classList.remove('visible');
             }
         }
         
@@ -348,7 +415,8 @@
             
             const orderDetails = {
                 vendor: vendorsString, items: itemsString, name: name,
-                location: location, total: finalTotal, priority: priority
+                location: location, total: finalTotal, priority: priority, 
+                batchTime: currentBatchName
             };
 
             fetch(GOOGLE_SCRIPT_URL, { 
@@ -364,9 +432,9 @@
                         <div class="success-screen">
                             <div class="icon">🎉</div>
                             <h2 class="page-title">Order Submitted!</h2>
-                            <p class="page-subtitle" style="margin-bottom: 24px;">Your order (#${data.orderid}) has been sent to our team.</p>
+                            <p class="page-subtitle" style="margin-bottom: 24px;">Your order (#${data.orderId}) has been sent to our team.</p>
                             <a href="https://wa.me/+6281110002171" class="button secondary" target="_blank">Contact Support</a>
-                            <button class="button" onclick="renderVendorList()">Place Another Order</button>
+                            <button class="button" onclick="initializeApp()">Place Another Order</button>
                         </div>`);
                 } else { throw new Error(data.message || 'An unknown error in the script.'); }
             })
@@ -376,7 +444,43 @@
             });
         }
 
-        window.onload = renderVendorList;
+        function initializeApp() {
+            const status = getCurrentBatchStatus();
+
+            if (status.state === "OPEN") {
+                // Set the global variable
+                currentBatchName = status.batchName;
+
+                updateFloatingCart();
+                renderVendorList(status.batchName, status.closesIn);
+            } else {
+                renderStoreClosed(status.nextBatchName, status.opensIn);
+            }
+        }
+
+        function renderStoreClosed(nextBatchName, opensIn) {
+            let message = `Ordering for the next batch (${nextBatchName}) opens in ${opensIn}.`;
+            if (opensIn === "Tomorrow") {
+                message = `We are closed for the day. Ordering for ${nextBatchName} opens tomorrow.`;
+            }
+            
+            let content = `
+                <div class="page-title">We're Currently Closed</div>
+                <div class="page-subtitle">${message}</div>
+                <p style="text-align: center; margin-bottom: 30px;">(You can still browse the menus below)</p>
+            `;
+            
+            vendors.forEach(vendor => {
+                content += `
+                    <div class="vendor-card" onclick="renderMenu('${vendor.name}', true)"> 
+                        <img src="${vendor.imageUrl}" alt="${vendor.name}">
+                        <div class="info"><h3>${vendor.name}</h3><p>${vendor.category}</p></div>
+                    </div>`;
+            });
+            renderPage(content);
+        }
+
+        window.onload = initializeApp;
     </script>
 </body>
 </html>
