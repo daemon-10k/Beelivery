@@ -16,6 +16,10 @@
             --text-color: #1d1d1f;
             --text-secondary-color: #6e6e73;
             --border-color: #EAEAEB; 
+            --success-color: #4CAF50;
+            --success-light: #D4EDDA;
+            --urgent-color: #e63946;
+            --modal-bg: rgba(0, 0, 0, 0.6);
         }
 
         * { box-sizing: border-box; }
@@ -57,9 +61,19 @@
         header .logo { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         header .logo img { height: 30px; width: 30px; }
         
-        main { padding: 32px 20px 120px; flex-grow: 1; }
+        main { 
+            padding: 24px 20px 90px; /* ADJUSTED: Reduced bottom padding from 120px to 90px */
+            flex-grow: 1; 
+        }
         
-        .page-title { font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .page-title { 
+            font-size: 32px; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            letter-spacing: -0.5px; 
+            text-align: center; 
+            margin-top: 0; 
+        }
         .page-subtitle { font-size: 16px; color: var(--text-secondary-color); margin-top: 0; margin-bottom: 32px; }
         .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; margin-top: 32px; }
 
@@ -67,22 +81,56 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Vendor Card */
-        .vendor-card { border-radius: 20px; margin-bottom: 20px; overflow: hidden; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
+        .vendor-card { 
+            border-radius: 20px; 
+            margin-bottom: 24px; 
+            overflow: hidden; 
+            cursor: pointer; 
+            transition: all 0.25s ease; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            position: relative; 
+        }
         .vendor-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
         .vendor-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
         .vendor-card .info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
-        .vendor-card h3 { margin: 0 0 4px; font-size: 20px; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+        .vendor-card h3 { 
+            margin: 0 0 4px; 
+            font-size: 20px; 
+            font-weight: 700; 
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5); 
+        }
         .vendor-card p { margin: 0; font-size: 15px; opacity: 0.9; }
 
         /* Menu Item */
         .menu-item { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #F1F1F2; }
-        .menu-item:first-child { padding-top: 0; }
+        .menu-item:first-child { 
+            padding-top: 20px; 
+        }
         .menu-item-info { flex-grow: 1; padding-right: 16px; }
         .menu-item h4 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
         .menu-item p { margin: 0; color: var(--text-color); font-size: 15px; }
         .quantity-selector { display: flex; align-items: center; }
-        .quantity-btn { background-color: var(--background-color); border: 1px solid var(--border-color); border-radius: 50%; width: 34px; height: 34px; font-size: 22px; font-weight: 400; cursor: pointer; transition: all 0.2s; color: var(--text-color); line-height: 32px; }
-        .quantity-btn:hover { background-color: #e9ecef; }
+        .quantity-btn { 
+            background-color: var(--background-color); 
+            border: 1px solid var(--border-color); 
+            border-radius: 50%; 
+            width: 34px; 
+            height: 34px; 
+            font-size: 22px; 
+            font-weight: 400; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            color: var(--text-color); 
+            line-height: 32px; 
+        }
+        .quantity-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: #f1f1f2;
+        }
+        .quantity-btn:hover:not(:disabled) { 
+            background-color: #e9ecef; 
+        }
         .quantity-display { margin: 0 12px; font-weight: 600; font-size: 17px; min-width: 22px; text-align: center; }
 
         /* Buttons & Forms */
@@ -90,7 +138,7 @@
         .button:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
         .button.secondary { background: var(--border-color); color: var(--text-color); }
         .button.secondary:hover { background: #dee2e6; }
-        /* FIX: Using the main border color for consistency */
+        
         input[type="text"], input[type="number"] { width: 100%; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-color); border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 16px; background-color: #F5F5F7; transition: all 0.2s; }
         input:focus { outline: none; border-color: var(--primary-dark); box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2); background-color: #fff; }
         
@@ -98,8 +146,38 @@
         .floating-cart-button { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; padding: 18px; background: var(--text-color); color: white; border-radius: 16px; font-size: 16px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: bottom 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 50; }
         .floating-cart-button.visible { bottom: 24px; }
         
-        #toast-notification { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; padding: 16px; background-color: #e63946; color: white; border-radius: 12px; text-align: center; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.15); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; }
-        #toast-notification.visible { bottom: 100px; }
+        /* ADJUSTED TOAST POSITIONING: bottom center, above the floating cart */
+        #toast-notification { 
+            position: fixed; 
+            bottom: -100px; /* Start off-screen at the bottom */
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 90%; 
+            max-width: 400px; 
+            padding: 16px; 
+            background-color: var(--urgent-color); 
+            color: white; 
+            border-radius: 12px; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            z-index: 100; 
+        }
+        #toast-notification.visible { 
+            bottom: 60px; 
+        }
+        
+        /* SHAKE ANIMATION */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(+2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(+4px, 0, 0); }
+        }
+        #app-container.shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
 
         /* Checkout Page */
         #order-summary { background-color: #fff; padding: 20px; border-radius: 18px; margin-bottom: 24px; }
@@ -120,6 +198,247 @@
         /* Success Screen */
         .success-screen { text-align: center; padding-top: 40px; }
         .success-screen .icon { font-size: 80px; }
+        
+        /* --- COUNTDOWN STYLES --- */
+        .status-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            margin-bottom: 32px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .status-container.open {
+            background-color: var(--success-light); 
+            color: var(--text-color);
+        }
+
+        .status-container.closed {
+            background-color: var(--border-color);
+            color: var(--text-secondary-color);
+        }
+
+        .status-container.express-only {
+            background-color: #FFECB3;
+            color: var(--text-color);
+        }
+
+
+        .status-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .countdown-timer-display {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 38px;
+            letter-spacing: -1px;
+            line-height: 1;
+            padding: 0;
+            margin: 0;
+        }
+
+        .status-container.open .countdown-timer-display {
+            color: var(--urgent-color); 
+        }
+
+        .status-container.closed .countdown-timer-display {
+            color: var(--success-color); 
+        }
+        
+        .status-container.express-only .countdown-timer-display {
+            color: #FF9800; 
+        }
+
+        /* Style for the emergency button when closed */
+        .emergency-order-box {
+            background-color: #fce3e3; 
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 24px;
+            text-align: center;
+            border: 1px solid var(--urgent-color);
+        }
+
+        .emergency-order-box h4 {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--urgent-color);
+        }
+        
+        .page-title:not(#menu-title) {
+            margin-top: 0; 
+        }
+
+        /* --- ITEM CUSTOMIZATION MODAL STYLES --- */
+        #item-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--modal-bg);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #item-modal.visible {
+            display: flex;
+            opacity: 1;
+        }
+        
+        /* SHAKE ANIMATION */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(+2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(+4px, 0, 0); }
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            width: 100%;
+            max-width: 450px;
+            max-height: 85%;
+            overflow-y: auto;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 24px 20px 100px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .modal-content.shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        #item-modal.visible .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .modal-close-btn {
+            background: var(--border-color);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .customization-section {
+            padding: 16px 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 16px;
+        }
+
+        .customization-section h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 10px;
+        }
+        
+        .customization-option {
+            display: block; 
+            padding: 8px 0;
+            font-size: 15px;
+            transition: opacity 0.3s ease;
+        }
+
+        .customization-option.disabled-option {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .customization-option label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .customization-option input[type="radio"],
+        .customization-option input[type="checkbox"] {
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            resize: vertical;
+            min-height: 80px;
+            background-color: #F5F5F7;
+        }
+
+        .required-message {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--urgent-color);
+            margin: 10px 0 0;
+            padding: 8px 12px;
+            border: 1px solid var(--urgent-color);
+            background-color: #ffeded;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #modal-footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            background: var(--surface-color);
+            padding: 12px 20px 24px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            border-top: 1px solid var(--border-color);
+            z-index: 201;
+        }
+        
+        .modal-quantity-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        /* --- END ITEM CUSTOMIZATION MODAL STYLES --- */
+
+
     </style>
 </head>
 <body>
@@ -134,79 +453,222 @@
         <div id="floating-cart" class="floating-cart-button"></div>
         <div id="toast-notification"></div>
     </div>
+    
+    <!-- Item Customization Modal Container -->
+    <div id="item-modal">
+        <div class="modal-content">
+            <!-- Modal content dynamically injected here -->
+        </div>
+        <div id="modal-footer">
+            <div class="modal-quantity-control">
+                <div style="font-weight: 600; font-size: 16px;">Quantity</div>
+                <div class="quantity-selector" id="modal-qty-selector">
+                    <!-- Qty controls injected here -->
+                </div>
+            </div>
+            <button id="add-to-cart-btn" class="button">Add to Cart</button>
+        </div>
+    </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsIfGxBDNPYVFjCgwfjsYwGvElnbVDFjtH2beRl_3i8bFg9xriHRyDwx4yv8lPR66t5A/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0YR9X1W6rPZ2FQpz46qrDabJBpEH9HIFNWi-DrCmQKoK00XNyG9nnMD_gj5ObtEQQaw/exec';
+        const appContainer = document.getElementById('app-container');
         const appContent = document.getElementById('app-content');
         const floatingCartButton = document.getElementById('floating-cart');
         const toastNotification = document.getElementById('toast-notification');
+        const itemModal = document.getElementById('item-modal');
+        const modalContent = itemModal.querySelector('.modal-content');
+        const modalFooter = document.getElementById('modal-footer');
+
         
-        // FIX 1: Defined this globally so all functions can access it
         let currentBatchName = ""; 
         let cart = {}; 
+        const MAX_CART_ITEMS = 3; // Define Max Items constant
+        let countdownInterval = null; 
+        
+        let currentModalItem = null;
+        let currentModalQuantity = 1;
 
+        // --- UUID POLYFILL FIX ---
+        // This function replaces crypto.randomUUID() which fails in some local environments (like VS Code Live Server)
+        function generateUniqueId() {
+            // Fallback for environments where crypto.randomUUID is not available
+            return 'xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        // --- END UUID POLYFILL FIX ---
+
+        // --- CORE OPERATING HOURS ---
+        const STORE_OPEN_HOUR = 9 * 60;  // 9:00 AM in minutes
+        const STORE_CLOSE_HOUR = 23 * 60; // 12:00 PM in minutes
+        
+        // --- BATCH SCHEDULE ---
         const batchSchedule = [
-            // { batchName: "Batch 1 (10:00 AM)", orderStart: "09:15", orderEnd: "09:45" },
-            { batchName: "Batch 2 (12:00 PM)", orderStart: "11:15", orderEnd: "11:45" },
-            { batchName: "Batch 3 (02:00 PM)", orderStart: "13:15", orderEnd: "13:45" },
-            { batchName: "Late Night Test Batch", orderStart: "23:00", orderEnd: "24:00" }
+            { batchName: "Early Bird ☀️ (9:00 AM)", orderStart: "09:00", orderEnd: "09:30" },
+            { batchName: "Mid-Morning ☕ (10:00 AM)", orderStart: "10:00", orderEnd: "10:30" },
+            { batchName: "Lunch Prep 🍚 (11:00 AM)", orderStart: "11:00", orderEnd: "11:30" },
         ];
+        
+        // Custom delivery fees (Service Fee + Priority/Express Fee)
+        const DELIVERY_FEES = {
+            Standard: 7000,
+            Priority: 10000, 
+            Express: 15000   
+        };
 
         function getCurrentBatchStatus() {
             const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
             const currentTime = now.getHours() * 60 + now.getMinutes();
 
-            for (const batch of batchSchedule) {
+            // 1. Check if completely outside store hours (12 PM to 9 AM)
+            if (currentTime < STORE_OPEN_HOUR || currentTime >= STORE_CLOSE_HOUR) {
+                return {
+                    state: "AFTER_HOURS",
+                    nextBatchName: batchSchedule[0].batchName,
+                    targetTime: "TOMORROW" // Force closed until tomorrow
+                };
+            }
+            
+            // 2. Check for open batches AND the gaps between them (EXPRESS_GAP)
+            for (let i = 0; i < batchSchedule.length; i++) {
+                const batch = batchSchedule[i];
                 const [startH, startM] = batch.orderStart.split(':').map(Number);
                 const [endH, endM] = batch.orderEnd.split(':').map(Number);
                 const startTime = startH * 60 + startM;
                 const endTime = endH * 60 + endM;
 
+                // 2a. Currently OPEN
                 if (currentTime >= startTime && currentTime < endTime) {
-                    const minutesLeft = endTime - currentTime;
                     return {
                         state: "OPEN",
                         batchName: batch.batchName,
-                        closesIn: `${minutesLeft} minutes`
+                        targetTime: batch.orderEnd 
                     };
                 }
+                
+                // 2b. We are in the GAP before this batch (Express Available Gap)
+                const prevBatchEndTime = i > 0 ? batchSchedule[i-1].orderEnd : "09:00"; 
+                const [prevEndH, prevEndM] = prevBatchEndTime.split(':').map(Number);
+                const previousEndTime = prevEndH * 60 + prevEndM;
 
-                if (currentTime < startTime) {
-                    const minutesUntilOpen = startTime - currentTime;
+                if (currentTime >= previousEndTime && currentTime < startTime) {
                     return {
-                        state: "CLOSED",
-                        nextBatchName: batch.batchName,
-                        opensIn: `${minutesUntilOpen} minutes`
+                        state: "EXPRESS_GAP",
+                        nextBatchName: batch.batchName, 
+                        targetTime: batch.orderStart 
                     };
                 }
             }
-
+            
+            // 3. We are after the very last batch's end time (11:30) but before store closing (12:00)
+            const lastBatch = batchSchedule[batchSchedule.length - 1];
+            const [lastEndH, lastEndM] = lastBatch.orderEnd.split(':').map(Number);
+            const lastEndTime = lastEndH * 60 + lastEndM;
+            
+            if (currentTime >= lastEndTime && currentTime < STORE_CLOSE_HOUR) {
+                 return {
+                    state: "EXPRESS_GAP",
+                    nextBatchName: "Closing Time ⏰", 
+                    targetTime: "12:00" 
+                };
+            }
+            
             return {
                 state: "AFTER_HOURS",
-                nextBatchName: batchSchedule[0].batchName, 
-                opensIn: "Tomorrow"
+                nextBatchName: batchSchedule[0].batchName,
+                targetTime: "TOMORROW" 
             };
+        }
+        
+        // --- Live Countdown Logic ---
+        function startLiveCountdown(targetTimeString, isTomorrow = false) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            const timerElement = document.getElementById('live-timer');
+            if (!timerElement) return;
+
+            if (targetTimeString === "TOMORROW") {
+                timerElement.innerText = "Opens Tomorrow";
+                return;
+            }
+
+            function updateTimer() {
+                const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+                
+                const [targetH, targetM] = targetTimeString.split(':').map(Number);
+                const targetDate = new Date(now);
+                targetDate.setHours(targetH, targetM, 0, 0);
+
+                if (isTomorrow || targetDate < now) {
+                    if (targetDate < now || isTomorrow) {
+                        targetDate.setDate(targetDate.getDate() + 1);
+                    }
+                }
+                
+                targetDate.setSeconds(0, 0); 
+
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    clearInterval(countdownInterval);
+                    timerElement.innerText = "00m 00s";
+                    setTimeout(initializeApp, 1000); 
+                    return;
+                }
+
+                const h = Math.floor(diff / 1000 / 60 / 60);
+                const m = Math.floor((diff / 1000 / 60) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+
+                let timeString = `${h}h ${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
+
+                if (h === 0) {
+                    timeString = `${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
+                }
+                timerElement.innerText = timeString;
+            }
+
+            updateTimer();
+            countdownInterval = setInterval(updateTimer, 1000);
         }
 
         const vendors = [
-            { name: 'Dapur Penyet', category: 'Authentic Indonesian', imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=700' }, 
-            { name: 'Nara Kitchen', category: 'Classic Nasi Campur', imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=700' },
-            { name: 'M Kubik', category: 'Traditional Soto & Gudeg', imageUrl: 'https://images.unsplash.com/photo-1681378128359-a5c2492a3535?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287' },
-            { name: 'Dapur Nieta', category: 'Ayam Geprek Specialist', imageUrl: 'https://images.unsplash.com/photo-1696340034876-6245523babfa?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287' }, 
-            { name: 'JJS', category: 'Fresh Juices & Snacks', imageUrl: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=700' }
+            { name: 'Dapur Penyet', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1732185269471-b62b52ca46f9?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }, 
+            { name: 'Nara Kitchen', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1680674814945-7945d913319c?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'M Kubik', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1572656306390-40a9fc3899f7?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Dapur Nieta', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1712926742786-c77530757ee3?q=80&w=2148&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }, 
+            { name: 'fresh fruit', category: 'Beverages', imageUrl: 'https://images.unsplash.com/photo-1546173159-315724a31696?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Mie Ayam Kirana', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1653049525170-d062fd2c39e6?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Rocky Rooster', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Claude Kitchen', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1749640566096-5d8098d452b4?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'TEH POCI', category: 'Beverages', imageUrl: 'https://images.unsplash.com/photo-1499638673689-79a0b5115d87?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Uncle Sam', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1617688242711-12868ea40c86?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Good Waffle', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1563009390-639e10013c92?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'koffielogik', category: 'Beverages', imageUrl: 'https://plus.unsplash.com/premium_photo-1690212143534-aff93264082b?q=80&w=1288&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Umami Dimsum', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1604632910793-c0601f361b34?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'Bakso Gepeng Kiki', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1687426163461-1eeb49c83584?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: 'BurgerSpot And WongPotato', category: 'Food', imageUrl: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }
         ];
 
         function renderPage(content) {
             appContent.innerHTML = `<div class="fade-in">${content}</div>`;
         }
 
-        function renderVendorList(batchName, closesIn) {
+        function renderVendorList(batchName, targetTime) {
             updateFloatingCart();
             let content = `
-                <div class="page-title">Order for the ${batchName}!</div>
-                <div class="page-subtitle" style="color: #e63946; font-weight: 600;">
-                    Ordering closes in: ${closesIn}
-                </div>`;
+                <div class="page-title">Welcome!</div>
+                
+                <!-- OPEN STATUS UI -->
+                <div class="status-container open">
+                    <div class="status-header">Order for the ${batchName}!</div>
+                    <p style="margin: 0; font-size: 14px;">Closes in</p>
+                    <div id="live-timer" class="countdown-timer-display">Loading...</div>
+                </div>
+                <!-- END OPEN UI -->
+                `;
                 
             vendors.forEach(vendor => {
                 content += `
@@ -216,67 +678,631 @@
                     </div>`;
             });
             renderPage(content);
+            
+            startLiveCountdown(targetTime);
         }
-
+        
         function showToast(message) {
             toastNotification.innerText = message;
             toastNotification.classList.add('visible');
+            
+            // Trigger app shake animation for visual feedback
+            appContainer.classList.add('shake');
+            setTimeout(() => {
+                appContainer.classList.remove('shake');
+            }, 500);
+
             setTimeout(() => {
                 toastNotification.classList.remove('visible');
             }, 3000);
         }
+        
+        // --- Customization Helpers ---
 
-        function updateCart(vendorName, itemName, change, price) {
-            let totalItems = 0;
-            for (const name in cart) { totalItems += cart[name].quantity; }
-            if (change > 0 && totalItems >= 3) {
-                showToast("Maximum of 3 items per order.");
+        function getSafeItemId(itemName) {
+            return itemName.replace(/[^a-zA-Z0-9]/g, '_').replace(/^_+|_+$/g, '');
+        }
+
+        function generateItemKey(itemName, notes, options) {
+            const mods = [];
+            if (notes) mods.push(`N:${notes.trim()}`);
+            if (options) {
+                const sortedOptionKeys = Object.keys(options).sort();
+                const sortedOptions = sortedOptionKeys.map(key => {
+                    const value = Array.isArray(options[key]) ? options[key].sort().join('&') : options[key];
+                    return `${key}:${value}`;
+                });
+                mods.push(sortedOptions.join('|'));
+            }
+            return `${itemName}|${mods.join('|')}`;
+        }
+
+        function getCartTotalByBaseItem(baseItemName) {
+            let total = 0;
+            for (const key in cart) {
+                if (cart[key].name === baseItemName) {
+                    total += cart[key].quantity;
+                }
+            }
+            return total;
+        }
+
+        function getGlobalCartItemCount() {
+             let total = 0;
+            for (const key in cart) {
+                total += cart[key].quantity;
+            }
+            return total;
+        }
+
+        const CUSTOMIZABLE_ITEMS = [
+            // Dapur Penyet
+            { 
+                name: 'Ayam Goreng + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            { 
+                name: 'Ayam Bakar + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            { 
+                name: 'Ayam Penyet + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            { 
+                name: 'Ayam Geprek + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            { 
+                name: 'Lele Goreng + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            { 
+                name: 'Lele Bakar + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            { 
+                name: 'Nilai Goreng + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            { 
+                name: 'Nilai Bakar + Nasi', 
+                options: [
+                    { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
+                        choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
+                ],
+                vendor: 'Dapur Penyet'
+            },
+            // Bakso Gepeng Kiki 
+            {
+                name: 'Kiki Gepeng Bihun',
+                options: [
+                    { name: 'Special Instructions', type: 'notes', required: false, placeholder: 'E.g., Bisa diganti/dicampur Bakso Urat Halus' }
+                ],
+                vendor: 'Bakso Gepeng Kiki'
+            },
+            // Claude Kitchen
+            {
+                name: 'Paket Nasi Hainan 2 Topping',
+                options: [
+                    { name: 'Topping Selection', type: 'checkbox', required: true, minSelections: 2, maxSelections: 2, 
+                      choices: ['Sate Ayam Manis', 'Kepak Madu', 'Gohiong Ayam', 'Ayam Goreng Bawang', 'Ayam Hainan', 'Ayam Charsiu', 'Ayam Panggang'] }
+                ],
+                vendor: 'Claude Kitchen'
+            },
+            {
+                name: 'Paket Nasi Hainan 3 Topping',
+                options: [
+                    { name: 'Topping Selection', type: 'checkbox', required: true, minSelections: 3, maxSelections: 3, 
+                      choices: ['Sate Ayam Manis', 'Kepak Madu', 'Gohiong Ayam', 'Ayam Goreng Bawang', 'Ayam Hainan', 'Ayam Charsiu', 'Ayam Panggang'] }
+                ],
+                vendor: 'Claude Kitchen'
+            },
+            {
+                name: 'Paket Nasi Hainan Spesial',
+                options: [
+                    { name: 'Topping Selection', type: 'checkbox', required: true, minSelections: 3, maxSelections: 3, 
+                      choices: ['Sate Ayam Manis', 'Kepak Madu', 'Gohiong Ayam', 'Ayam Goreng Bawang', 'Ayam Hainan', 'Ayam Charsiu', 'Ayam Panggang'] }
+                ],
+                vendor: 'Claude Kitchen'
+            }
+        ];
+        
+        function getItemCustomizationData(itemName, vendorName) {
+            return CUSTOMIZABLE_ITEMS.find(item => item.name === itemName && item.vendor === vendorName);
+        }
+        
+        function setupCheckboxListeners() {
+            const checkboxSections = document.querySelectorAll('.customization-section[data-type="checkbox"]');
+
+            checkboxSections.forEach(section => {
+                const checkboxes = section.querySelectorAll('input[type="checkbox"]');
+                const minMaxData = checkboxes.length > 0 ? checkboxes[0].getAttribute('data-min-max') : null;
+                
+                if (!minMaxData) return;
+                
+                const [minStr, maxStr] = minMaxData.split('-');
+                const maxSelections = parseInt(maxStr, 10);
+                
+                function updateCheckboxState() {
+                    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+                    
+                    checkboxes.forEach(cb => {
+                        if (checkedCount >= maxSelections && !cb.checked) {
+                            cb.disabled = true;
+                            cb.closest('.customization-option').classList.add('disabled-option');
+                        } else {
+                            cb.disabled = false;
+                            cb.closest('.customization-option').classList.remove('disabled-option');
+                        }
+                    });
+                }
+                
+                checkboxes.forEach(cb => {
+                    cb.addEventListener('change', updateCheckboxState);
+                });
+
+                updateCheckboxState();
+            });
+        }
+        
+        // --- END Customization Helpers ---
+
+
+        // MODIFIED: Merged cart logic to handle both item types (This version correctly handles customization keys)
+        function updateCart(itemKey, vendorName, itemName, change, price, notes = "", options = "") {
+            let totalItems = getGlobalCartItemCount();
+            
+            // Check max item limit (3 items total) - only applies when increasing quantity
+            if (change > 0 && totalItems >= MAX_CART_ITEMS) {
+                showToast(`Maximum of ${MAX_CART_ITEMS} items per order. Please remove an item first.`);
                 return;
             }
             
-            const cleanItemName = itemName.replace(/[^a-zA-Z0-9]/g, '');
-            if (!cart[itemName]) { cart[itemName] = { name: itemName, quantity: 0, price: price, vendor: vendorName }; }
-            cart[itemName].quantity += change;
-            if (cart[itemName].quantity <= 0) { delete cart[itemName]; }
-            
-            const displayElement = document.getElementById(`qty-${cleanItemName}`);
-            if (displayElement) { displayElement.innerText = cart[itemName] ? cart[itemName].quantity : 0; }
-            
-            // FIX 2: Removed 'batchName' argument. It now updates purely based on cart state.
+            // --- DECREMENT LOGIC ---
+            if (change < 0) {
+                // If itemKey is simple ('ItemName|'), search for an instance of the base item name
+                const isSimpleItem = itemKey.endsWith('|'); 
+                let keyToModify = itemKey;
+                
+                if (isSimpleItem) {
+                    // Find the FIRST item that matches the base name (handles reduction of non-customized stack)
+                    let foundKey = Object.keys(cart).find(key => cart[key].name === itemName && cart[key].quantity > 0);
+                    if (foundKey) {
+                        keyToModify = foundKey;
+                    } else {
+                        return; // Item not found, already at zero
+                    }
+                }
+
+                if (cart[keyToModify]) {
+                    cart[keyToModify].quantity += change;
+
+                    if (cart[keyToModify].quantity <= 0) { 
+                       delete cart[keyToModify]; 
+                    }
+                } else {
+                    return; // Cannot decrement if the specific item key is not found
+                }
+            }
+            // --- INCREMENT LOGIC ---
+            else if (change > 0) {
+                if (!cart[itemKey]) { 
+                    cart[itemKey] = { 
+                        name: itemName, 
+                        quantity: 0, 
+                        price: price, 
+                        vendor: vendorName,
+                        notes: notes,
+                        options: options
+                    }; 
+                }
+                cart[itemKey].quantity += change;
+            }
+
+            // Update quantity display on menu if it exists
+            const qtyElementId = getSafeItemId(itemName);
+            const displayElement = document.getElementById(`qty-${qtyElementId}`); 
+            const minusButton = document.getElementById(`minus-btn-${qtyElementId}`); 
+            const hasCustomization = getItemCustomizationData(itemName, vendorName) !== undefined;
+            const totalQty = getCartTotalByBaseItem(itemName);
+            const newTotalItems = getGlobalCartItemCount();
+
+
+            // Handle UI update for non-customizable items
+            if (displayElement && !hasCustomization) {
+                displayElement.innerText = totalQty;
+
+                // Show/hide controls based on total quantity
+                if (totalQty > 0) {
+                    displayElement.style.display = '';
+                    if (minusButton) minusButton.style.display = '';
+                } else {
+                    displayElement.style.display = 'none';
+                    if (minusButton) minusButton.style.display = 'none';
+                }
+            }
+
+            // --- CART FULL LOGIC ---
+            if (newTotalItems >= MAX_CART_ITEMS) {
+                // 1. Disable all plus buttons in the menu
+                document.querySelectorAll('.quantity-selector .quantity-btn').forEach(btn => {
+                    if (btn.innerText.includes('+')) {
+                        btn.disabled = true;
+                    }
+                });
+            } else {
+                 // Re-enable all plus buttons if we removed an item
+                 document.querySelectorAll('.quantity-selector .quantity-btn').forEach(btn => {
+                     if (btn.innerText.includes('+')) {
+                         btn.disabled = false;
+                     }
+                 });
+            }
+
+
             updateFloatingCart(); 
+            // If the user is in the modal, hide it after adding/removing
+            if (itemModal && itemModal.classList.contains('visible')) {
+                hideItemModal();
+            }
         }
         
+        // Function to be called from the menu item buttons (MODIFIED)
+        function openItemModal(vendorName, itemName, price, hasCustomization, isDecrement = false) {
+            
+            // Check cart limit first for both actions
+            const totalItems = getGlobalCartItemCount();
+
+            if (!isDecrement && totalItems >= MAX_CART_ITEMS) {
+                showToast(`Maximum of ${MAX_CART_ITEMS} items per order. Please remove an item first.`);
+                return;
+            }
+
+            const itemKey = generateItemKey(itemName); // Base key for non-customizable items
+
+            // 1. NON-CUSTOMIZABLE ITEM: Use direct updateCart for +/-
+            if (!hasCustomization) {
+                updateCart(itemKey, vendorName, itemName, isDecrement ? -1 : 1, price);
+                return;
+            }
+
+            // 2. CUSTOMIZABLE ITEM: Proceed to modal
+            // Block decrement for customizable items via the main menu button
+            if (isDecrement) {
+                 showToast("Customizable items cannot be reduced from the menu. Please view cart to remove them (coming soon!).");
+                 return;
+            }
+
+            currentModalItem = { vendorName, itemName, price, notes: "", options: "", quantity: 1 };
+            currentModalQuantity = 1;
+
+            renderItemModal();
+            itemModal.classList.add('visible');
+            modalFooter.classList.add('visible');
+        }
+
+        // Functions for Modal Control (MERGED)
+        function hideItemModal() {
+            itemModal.classList.remove('visible');
+            modalFooter.classList.remove('visible');
+            currentModalItem = null;
+            currentModalQuantity = 1; 
+        }
+
+        function updateModalQuantity(change) {
+            const newQty = currentModalQuantity + change;
+            if (newQty < 1) return;
+            
+            let totalItemsInCart = getGlobalCartItemCount();
+
+            // Check if adding the next item would exceed the limit
+            if (change > 0 && totalItemsInCart + newQty > MAX_CART_ITEMS) {
+                // If the user tries to increment beyond the limit, cap the quantity
+                if (totalItemsInCart < MAX_CART_ITEMS) {
+                    currentModalQuantity = MAX_CART_ITEMS - totalItemsInCart;
+                }
+                showToast(`Adding this quantity would exceed the maximum of ${MAX_CART_ITEMS} items.`);
+                
+            } else {
+                currentModalQuantity = newQty;
+            }
+
+            document.getElementById('modal-qty-display').innerText = currentModalQuantity;
+            document.getElementById('add-to-cart-btn').innerText = `Add ${currentModalQuantity} to Cart`;
+            
+            // Re-check button disable state if the final quantity is capped or the cart is already full
+             if (totalItemsInCart + currentModalQuantity > MAX_CART_ITEMS || currentModalQuantity === 0) {
+                 document.getElementById('add-to-cart-btn').disabled = true;
+                 document.getElementById('add-to-cart-btn').innerText = `Cart Full (Max ${MAX_CART_ITEMS})`;
+             } else {
+                 document.getElementById('add-to-cart-btn').disabled = false;
+                 document.getElementById('add-to-cart-btn').innerText = `Add ${currentModalQuantity} to Cart`;
+             }
+        }
+
+        function handleModalAddToCart() {
+            if (!currentModalItem) return;
+
+            const notes = document.getElementById('item-notes').value;
+            const options = {};
+            let allRequiredChecked = true;
+            let validationMessage = "";
+
+            // Global cart check before processing customizations
+            const currentTotalItems = getGlobalCartItemCount();
+            if (currentTotalItems + currentModalQuantity > MAX_CART_ITEMS) {
+                showToast(`Cannot add ${currentModalQuantity} item(s). You can only add ${MAX_CART_ITEMS - currentTotalItems} more item(s).`);
+                return;
+            }
+
+            const customizationData = getItemCustomizationData(currentModalItem.itemName, currentModalItem.vendorName);
+
+            if (customizationData) {
+                customizationData.options.forEach((option, index) => {
+                    const groupName = `mod-${option.name.replaceAll(/\s/g, '-')}-${index}`;
+                    const selectors = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+                    
+                    if (option.type === 'notes') return;
+
+                    if (option.required) {
+                         if (selectors.length === 0) {
+                            allRequiredChecked = false;
+                            validationMessage = `Please select an option for ${option.name}.`;
+                            return;
+                        }
+
+                        if (option.type === 'checkbox' && (selectors.length < option.minSelections || selectors.length > option.maxSelections)) {
+                            allRequiredChecked = false;
+                            validationMessage = `Please select exactly ${option.minSelections} items for ${option.name}.`;
+                            return;
+                        }
+                    }
+
+                    if (option.type === 'radio' && selectors.length > 0) {
+                        options[option.name] = selectors[0].value;
+                    } else if (option.type === 'checkbox') {
+                        const selectedValues = Array.from(selectors).map(s => s.value);
+                        if (selectedValues.length > 0) {
+                            options[option.name] = selectedValues;
+                        }
+                    }
+                });
+            }
+            
+            if (!allRequiredChecked) {
+                 showToast(validationMessage);
+                 
+                 const modalBox = document.querySelector('.modal-content');
+                 if (modalBox) {
+                     modalBox.classList.add('shake');
+                     setTimeout(() => {
+                         modalBox.classList.remove('shake');
+                     }, 500);
+                 }
+                 
+                 return;
+            }
+
+            const itemKeyBase = generateItemKey(currentModalItem.itemName, notes, options);
+            
+            for(let i = 0; i < currentModalQuantity; i++) {
+                // Use the polyfill function here
+                const itemKey = `${itemKeyBase}-${generateUniqueId()}`; 
+
+                const finalOptions = {};
+                for (const key in options) {
+                    finalOptions[key] = Array.isArray(options[key]) ? options[key].join(', ') : options[key];
+                }
+
+                updateCart(
+                    itemKey,
+                    currentModalItem.vendorName,
+                    currentModalItem.itemName,
+                    1, 
+                    currentModalItem.price,
+                    notes,
+                    finalOptions
+                );
+            }
+        }
+
+        function renderItemModal() {
+            if (!currentModalItem) return;
+
+            const customizationData = getItemCustomizationData(currentModalItem.itemName, currentModalItem.vendorName);
+            let customizationHTML = '';
+            let notesPlaceholder = "E.g., No salt, extra sauce, separate packaging...";
+
+            if (customizationData && customizationData.options.length > 0) {
+                customizationData.options.forEach((option, index) => {
+                    const uniqueGroupName = `mod-${option.name.replaceAll(/\s/g, '-')}-${index}`;
+                    let optionChoicesHTML = '';
+                    
+                    if (option.type === 'notes') {
+                        notesPlaceholder = option.placeholder || notesPlaceholder;
+                        return;
+                    }
+                    
+                    option.choices.forEach((choice, choiceIndex) => {
+                        const choiceText = choice.replace(/\s\(\+\d+k\)$/, ''); 
+                        const isChecked = choiceIndex === 0 && option.type === 'radio' && option.required;
+
+                        optionChoicesHTML += `
+                            <div class="customization-option">
+                                <label for="${uniqueGroupName}-${choiceIndex}">
+                                    <span>${choice}</span>
+                                    <input type="${option.type}" 
+                                       name="${uniqueGroupName}" 
+                                       value="${choiceText}" 
+                                       id="${uniqueGroupName}-${choiceIndex}" 
+                                       ${isChecked ? 'checked' : ''} 
+                                       data-min-max="${option.minSelections || ''}-${option.maxSelections || ''}">
+                                </label>
+                            </div>
+                        `;
+                    });
+                    
+                    const prominentReminder = option.required && option.type === 'checkbox' ? 
+                        `<div class="required-message">
+                            <strong>REQUIRED:</strong> Please select exactly ${option.minSelections} topping(s).
+                        </div>` : '';
+
+
+                    customizationHTML += `
+                        <div class="customization-section" data-group-name="${uniqueGroupName}" data-type="${option.type}">
+                            <h4>${option.name}</h4>
+                            ${prominentReminder}
+                            ${optionChoicesHTML}
+                        </div>
+                    `;
+                });
+            }
+            
+            modalContent.innerHTML = `
+                <div class="modal-header">
+                    <h3>${currentModalItem.itemName}</h3>
+                    <button class="modal-close-btn" onclick="hideItemModal()">X</button>
+                </div>
+                <p style="color: var(--text-secondary-color); margin-top: -10px;">Rp ${currentModalItem.price.toLocaleString('id-ID')}</p>
+                ${customizationHTML}
+                <!-- 2. Render Notes Textarea (always at the bottom) -->
+                <div class="customization-section" style="border-top: none; margin-bottom: 40px;"> 
+                    <h4>Special Instructions (Optional)</h4>
+                    <textarea id="item-notes" placeholder="${notesPlaceholder}"></textarea>
+                </div>
+            `;
+            
+            const totalItemsInCart = getGlobalCartItemCount();
+            // Default quantity is 1 unless cart is already full
+            currentModalQuantity = (totalItemsInCart < MAX_CART_ITEMS) ? 1 : 0;
+            
+            const qtySelectorHTML = `
+                <button class="quantity-btn" onclick="updateModalQuantity(-1)">-</button>
+                <span class="quantity-display" id="modal-qty-display">${currentModalQuantity}</span>
+                <button class="quantity-btn" onclick="updateModalQuantity(1)">+</button>
+            `;
+            document.getElementById('modal-qty-selector').innerHTML = qtySelectorHTML;
+            
+            const addBtn = document.getElementById('add-to-cart-btn');
+            addBtn.onclick = handleModalAddToCart;
+
+            if (currentModalQuantity === 0) {
+                 addBtn.disabled = true;
+                 addBtn.innerText = `Cart Full (Max ${MAX_CART_ITEMS})`;
+            } else {
+                 addBtn.disabled = false;
+                 addBtn.innerText = `Add ${currentModalQuantity} to Cart`;
+            }
+
+            setupCheckboxListeners();
+        }
+
+
         function renderMenu(vendorName, isClosed = false) {
-            renderPage(`<div style="text-align: center;"><p>Loading menu...</p></div>`);
+            if(countdownInterval) clearInterval(countdownInterval);
+
+            const status = getCurrentBatchStatus();
+            if (status.state === "EXPRESS_GAP") {
+                isClosed = false; 
+            }
+            
+            appContent.innerHTML = `
+                <div class="fade-in" style="text-align: center; padding-top: 40px;">
+                    <h2 class="page-title" id="menu-title">${vendorName}</h2>
+                    <p style="color: var(--text-secondary-color);">Loading menu...</p>
+                </div>
+            `;
             
             fetch(`${GOOGLE_SCRIPT_URL}?vendor=${vendorName}`)
                 .then(res => res.json())
                 .then(menuItems => {
                     if (menuItems.error) {
-                        renderPage(`<h2>Error</h2><p>${menuItems.error}</p><button class="button secondary" onclick="renderVendorList()">Back</button>`);
+                        renderPage(`<h2>Error</h2><p>${menuItems.error}</p><button class="button secondary" onclick="initializeApp()">Back</button>`);
                         return;
                     }
                     let menuHTML = '';
-                    menuItems.forEach(item => {
-                        const cleanItemName = item.name.replace(/[^a-zA-Z0-9]/g, '');
-                        const currentQuantity = cart[item.name] ? cart[item.name].quantity : 0;
+                    
+                    const isGlobalCartFull = getGlobalCartItemCount() >= MAX_CART_ITEMS;
+                    const disabledAttribute = isClosed ? 'disabled' : '';
 
-                        const disabledAttribute = isClosed ? 'disabled' : '';
-                        const disabledClass = isClosed ? 'style="opacity: 0.5; cursor: not-allowed;"' : '';
+                    menuItems.forEach(item => {
+                        const itemNameFromJson = item.name.trim();
+
+                        const hasCustomization = getItemCustomizationData(itemNameFromJson, vendorName) !== undefined;
+
+                        const currentQuantity = getCartTotalByBaseItem(itemNameFromJson);
+                        
+                        const qtyElementId = getSafeItemId(itemNameFromJson);
+
+
+                        const onClickActionPlus = `openItemModal('${vendorName}', '${itemNameFromJson}', ${item.price}, ${hasCustomization})`;
+                        const onClickActionMinus = `openItemModal('${vendorName}', '${itemNameFromJson}', ${item.price}, ${hasCustomization}, true)`;
+
+                        const disabledPlusButton = isClosed || isGlobalCartFull ? 'disabled' : '';
+                        const showSimpleControls = !hasCustomization;
 
                         menuHTML += `
-                        <div class="menu-item" ${disabledClass}>
-                            <div class="menu-item-info"><h4>${item.name}</h4><p>Rp ${parseInt(item.price).toLocaleString('id-ID')}</p></div>
+                        <div class="menu-item" ${isClosed ? 'style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                            <div class="menu-item-info">
+                                <h4>${item.name}</h4>
+                                <p>Rp ${parseInt(item.price).toLocaleString('id-ID')}</p>
+                                ${hasCustomization ? '<span style="font-size: 12px; color: var(--primary-dark); font-weight: 600;">Customization Required (Click +)</span>' : ''}
+                            </div>
                             <div class="quantity-selector">
-                                <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', -1, ${item.price})" ${disabledAttribute}>-</button>
-                                <span class="quantity-display" id="qty-${cleanItemName}">${currentQuantity}</span>
-                                <button class="quantity-btn" onclick="updateCart('${vendorName}', '${item.name}', 1, ${item.price})" ${disabledAttribute}>+</button>
+                                ${showSimpleControls ? 
+                                    (currentQuantity > 0 ?
+                                        // Non-customizable item controls (show minus button and quantity if > 0)
+                                        `<button class="quantity-btn" id="minus-btn-${qtyElementId}" onclick="${onClickActionMinus}" ${disabledAttribute}>-</button>
+                                        <span class="quantity-display" id="qty-${qtyElementId}">${currentQuantity}</span>` 
+                                        : 
+                                        // Render hidden controls for quantity 0 so JavaScript can update them later
+                                        `<button class="quantity-btn" id="minus-btn-${qtyElementId}" onclick="${onClickActionMinus}" ${disabledAttribute} style="display: none;">-</button>
+                                        <span class="quantity-display" id="qty-${qtyElementId}" style="display: none;">${currentQuantity}</span>`
+                                    )
+                                    : ''}
+                                <!-- Plus button is disabled if cart is full -->
+                                <button class="quantity-btn" 
+                                        id="plus-btn-${qtyElementId}"
+                                        onclick="${onClickActionPlus}" 
+                                        ${disabledAttribute} 
+                                        ${disabledPlusButton}
+                                        data-item-name="${itemNameFromJson}"
+                                        >+</button>
                             </div>
                         </div>`;
-                });
+                    });
 
                 renderPage(`
-                    <h2 class="page-title">${vendorName}</h2>
+                    <h2 class="page-title" id="menu-title" style="margin-top: 0; margin-bottom: 24px;">${vendorName}</h2>
                     <div id="menu-list">${menuHTML}</div>
                     <button class="button secondary" style="margin-top: 24px;" onclick="initializeApp()">‹ All Vendors</button>`);
                 
@@ -286,74 +1312,153 @@
             });
         }
         
-        function renderCheckout() {
-            // Using the global currentBatchName
-            let batchName = currentBatchName;
+        function renderCheckout(isExpressAnytime = false) {
+            if(countdownInterval) clearInterval(countdownInterval);
+            
+            const status = getCurrentBatchStatus();
+
+            const isExpressGapWindow = status.state === "EXPRESS_GAP";
+            
+            if (isExpressGapWindow) {
+                isExpressAnytime = true;
+            }
+
+            let batchName = isExpressAnytime ? "Express Anytime" : currentBatchName;
             
             let orderSummaryHTML = '';
             let subtotal = 0;
             const vendorGroups = {};
 
-            for (const itemName in cart) {
-                const item = cart[itemName];
+            for (const itemKey in cart) {
+                const item = cart[itemKey];
                 if (item.quantity > 0) {
                     if (!vendorGroups[item.vendor]) vendorGroups[item.vendor] = [];
-                    vendorGroups[item.vendor].push(item);
+                    vendorGroups[item.vendor].push({...item, itemKey});
                 }
             }
+            
+            if (Object.keys(cart).length === 0) {
+                 initializeApp();
+                 showToast("Cart is empty, redirecting to menu.");
+                 return;
+            }
+
 
             for (const vendorName in vendorGroups) {
                 orderSummaryHTML += `<div class="vendor-group"><h3>${vendorName}</h3>`;
                 vendorGroups[vendorName].forEach(item => {
-                    const itemTotal = item.quantity * item.price;
+                    const qty = item.options ? 1 : item.quantity;
+                    const itemTotal = item.price * qty; 
+                    const itemKey = item.itemKey || generateItemKey(item.name); 
+
+                    // Display customizations
+                    let modString = [];
+                    if (item.options && Object.keys(item.options).length > 0) {
+                        for(const optionName in item.options) {
+                            modString.push(`(${item.options[optionName]})`);
+                        }
+                    }
+                    if (item.notes && item.notes.trim() !== "") {
+                        modString.push(`(Note: ${item.notes.trim()})`);
+                    }
+                    const modDisplay = modString.length > 0 ? `<br><span style="font-size: 13px; color: var(--text-secondary-color);">${modString.join(' ')}</span>` : '';
+
                     subtotal += itemTotal;
-                    orderSummaryHTML += `<p><span>${item.quantity}x ${item.name}</span><span>Rp ${itemTotal.toLocaleString('id-ID')}</span></p>`;
+                    
+                    // Minus button in checkout works for ALL items, using the unique itemKey.
+                    orderSummaryHTML += `
+                        <p>
+                            <span>${qty}x ${item.name}${modDisplay}</span>
+                            <span>
+                                Rp ${itemTotal.toLocaleString('id-ID')}
+                                <button class="quantity-btn" 
+                                    onclick="updateCart('${itemKey}', '${item.vendor}', '${item.name}', -1, ${item.price}); renderCheckout(${isExpressAnytime})"
+                                    style="width: 24px; height: 24px; font-size: 16px; line-height: 22px; margin-left: 8px;">-</button>
+                            </span>
+                        </p>`;
                 });
                 orderSummaryHTML += `</div>`;
             }
 
-            renderPage(`
-                <h2 class="page-title">Confirm Order</h2>
-                <div id="order-summary">${orderSummaryHTML}<hr><div id="service-fee-line"></div><p><strong>Total:</strong><strong id="final-total"></strong></p></div>
-                <h3 class="section-title">Delivery Speed</h3>
-                <div id="delivery-options">
+            let deliveryOptionsHTML = '';
+
+            if (isExpressAnytime) {
+                 deliveryOptionsHTML = `
+                    <label class="delivery-option selected" for="express-deliv">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM15 11h-2V7h-2v4H9l3 3 3-3z"/></svg></div>
+                        <div><h4>⚡ EXPRESS Anytime</h4><p>ASAP (Non-Batch) Delivery (+Rp ${DELIVERY_FEES.Express.toLocaleString('id-ID')})</p></div>
+                        <input type="radio" id="express-deliv" name="priority" value="Express" checked>
+                    </label>
+                 `;
+            } else {
+                deliveryOptionsHTML = `
                     <label class="delivery-option" for="standard-deliv">
                         <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg></div>
-                        <div><h4>Standard</h4><p>~40-45 mins</p></div>
+                        <div><h4>Standard</h4><p>Queued for ${batchName} (+Rp ${DELIVERY_FEES.Standard.toLocaleString('id-ID')})</p></div>
                         <input type="radio" id="standard-deliv" name="priority" value="Standard" checked>
                     </label>
                     <label class="delivery-option" for="priority-deliv">
                         <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="m14.4 6-1.4 1.4 2.6 2.6H8v2h7.6l-2.6 2.6L14.4 16l5-5-5-5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></div>
-                        <div><h4>Priority</h4><p>~30-35 mins (+Rp 4,000)</p></div>
+                        <div><h4>Priority</h4><p>Faster Queue Access (+Rp ${DELIVERY_FEES.Priority.toLocaleString('id-ID')})</p></div>
                         <input type="radio" id="priority-deliv" name="priority" value="Priority">
                     </label>
-                    <label class="delivery-option" for="express-deliv">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM15 11h-2V7h-2v4H9l3 3 3-3z"/></svg></div>
-                        <div><h4>Express</h4><p>&lt; 20-25 mins (+Rp 8,000)</p></div>
-                        <input type="radio" id="express-deliv" name="priority" value="Express">
-                    </label>
+                `;
+            }
+
+
+            renderPage(`
+                <h2 class="page-title" style="margin-top: 0;">Confirm Order</h2>
+                <div id="order-summary">${orderSummaryHTML}<hr><div id="service-fee-line" style="margin-bottom: 12px;"></div><p><strong>Total:</strong><strong id="final-total"></strong></p></div>
+                
+                <h3 class="section-title">1. Delivery Speed</h3>
+                <div id="delivery-options">
+                    ${deliveryOptionsHTML}
                 </div>
-                <h3 class="section-title">Your Details</h3>
-                <p style="text-align: center; color: var(--text-secondary-color); font-size: 14px; margin-top: 0px; margin-bottom: 24px;">To ensure fast delivery for everyone, each order is limited to 3 items. Thanks for your understanding!</p>
+
+                <h3 class="section-title">2. Payment (QRIS/Transfer)</h3>
+                <div style="background: white; padding: 20px; border-radius: 18px; text-align: center; margin-bottom: 24px; border: 1px solid var(--border-color);">
+                    <p style="margin-top: 0; color: var(--text-secondary-color);">Please transfer the <strong>Exact Total</strong> to:</p>
+                    
+                    <img src="qris.jpeg" 
+                         style="width: 360px; height: 475px; margin: 10px 0; border-radius: 8px;">
+                    
+                    <p style="font-weight: 700; font-size: 18px; margin-bottom: 5px;">a.n. WILBERT, DIGITAL & KREATIF</p>
+                    <p style="margin: 0;">MOHON CANTUMKAN NAMA PENGIRIM di kolom keterangan transfer</p>
+                </div>
+
+                <h3 class="section-title">3. Your Details</h3>
+                <p style="text-align: center; color: var(--text-secondary-color); font-size: 14px; margin-top: 0; margin-bottom: 24px;">To ensure fast delivery for everyone, each order is limited to 3 items.</p>
+                
                 <form id="checkout-form">
-                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="text" name="name" placeholder="Your Full Name" required>
                     <input type="text" name="location" placeholder="Location (e.g., A0801)" required>
+                    
+                    <!-- Payment Verification Fields -->
+                    <div style="background: #FFF8E1; padding: 15px; border-radius: 12px; border: 1px solid #FFE082; margin-bottom: 15px;">
+                        <label style="font-size: 14px; font-weight: 600; display: block; margin-bottom: 8px;">Payment Verification</label>
+                        <input type="text" name="payment_sender" placeholder="Sender Name (Nama Pengirim di Rekening)" required 
+                               style="margin-bottom: 8px; background: white;">
+                        <div style="display: flex; align-items: flex-start; gap: 10px;">
+                            <input type="checkbox" required style="width: 20px; height: 20px; margin-top: 2px;">
+                            <span style="font-size: 13px; line-height: 1.4;">I confirm I have transferred the exact total. False claims will result in a ban.</span>
+                        </div>
+                    </div>
+
                     <div id="form-status" style="margin-top:10px; text-align:center;"></div>
-                    <button type="submit" class="button">Submit Order & Pay</button>
+                    <button type="submit" class="button">Confirm Payment & Order</button>
                 </form>
-                <button class="button secondary" onclick="renderVendorList('${batchName}', 'Calculating...')">‹ Cancel Order</button>
+                <button class="button secondary" onclick="initializeApp()">‹ Cancel Order</button>
             `);
             
             const deliveryOptions = document.querySelectorAll('.delivery-option');
             let currentTotal = 0;
 
             function calculateAndDisplayTotal() {
-                let serviceFee = 7000;
                 const selectedOption = document.querySelector('input[name="priority"]:checked').value;
-                if (selectedOption === 'Priority') serviceFee += 4000;
-                else if (selectedOption === 'Express') serviceFee += 8000;
+                const serviceFee = DELIVERY_FEES[selectedOption];
+                
                 const finalTotal = subtotal + serviceFee;
-                document.getElementById('service-fee-line').innerHTML = `<p><span>Service Fee</span><span>Rp ${serviceFee.toLocaleString('id-ID')}</span></p>`;
+                document.getElementById('service-fee-line').innerHTML = `<p style="margin-bottom: 12px;"><span>Service Fee (${selectedOption})</span><span>Rp ${serviceFee.toLocaleString('id-ID')}</span></p>`;
                 document.getElementById('final-total').innerText = `Rp ${finalTotal.toLocaleString('id-ID')}`;
                 return finalTotal;
             }
@@ -365,27 +1470,36 @@
                     currentTotal = calculateAndDisplayTotal();
                 });
             });
-
-            document.querySelector('.delivery-option').classList.add('selected');
+            
+            const initialSelectedOption = document.querySelector('input[name="priority"]:checked');
+            if(initialSelectedOption) {
+                document.querySelector(`label[for="${initialSelectedOption.id}"]`).classList.add('selected');
+            } else {
+                document.querySelector('.delivery-option').classList.add('selected');
+            }
+            
             currentTotal = calculateAndDisplayTotal();
             document.getElementById('checkout-form').addEventListener('submit', (e) => handleFormSubmit(e, currentTotal));
         }
         
-        // FIX 3: Removed parameters. It now accesses 'cart' and 'currentBatchName' globally.
         function updateFloatingCart() {
             const btn = document.getElementById('floating-cart');
             let subtotal = 0;
             let itemCount = 0;
-            for (const name in cart) {
-                itemCount += cart[name].quantity;
-                subtotal += cart[name].quantity * cart[name].price;
+            for (const key in cart) {
+                itemCount += cart[key].quantity;
+                subtotal += cart[key].quantity * cart[key].price;
             }
             if (itemCount > 0) {
                 btn.innerText = `View Cart (${itemCount}) • Rp ${subtotal.toLocaleString('id-ID')}`;
                 btn.classList.add('visible');
                 
-                // FIX 4: Ensures it sends the global currentBatchName to checkout
-                btn.onclick = () => renderCheckout();
+                const status = getCurrentBatchStatus();
+                if (status.state === "EXPRESS_GAP") {
+                    btn.onclick = () => renderCheckout(true); 
+                } else {
+                    btn.onclick = () => renderCheckout(false);
+                }
             } else {
                 btn.classList.remove('visible');
             }
@@ -394,29 +1508,48 @@
         function handleFormSubmit(e, finalTotal) {
             e.preventDefault();
             const formStatus = document.getElementById('form-status');
-            formStatus.innerText = 'Submitting your order...';
+            formStatus.innerText = 'Verifying & Submitting...';
+
+            const orderId = Math.floor(100000 + Math.random() * 900000);
 
             const formData = new FormData(e.target);
             const name = formData.get('name');
             const location = formData.get('location');
+            const paymentSender = formData.get('payment_sender');
             const priority = document.querySelector('input[name="priority"]:checked').value;
 
             let itemsString = '';
             let vendorsString = '';
             const vendorSet = new Set();
-            for (const itemName in cart) {
-                if (cart[itemName].quantity > 0) { 
-                    itemsString += `(${cart[itemName].vendor}) ${cart[itemName].quantity}x ${itemName}; `;
-                    vendorSet.add(cart[itemName].vendor);
+
+            for (const itemKey in cart) {
+                const item = cart[itemKey];
+                if (item.quantity > 0) { 
+                    // Format customization for submission
+                    let modString = '';
+                    if (item.options && Object.keys(item.options).length > 0) {
+                        modString += Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(' / ');
+                    }
+                    if (item.notes && item.notes.trim() !== "") {
+                        if (modString) modString += ' | ';
+                        modString += `Note: ${item.notes.trim()}`;
+                    }
+                    
+                    const qty = item.quantity; 
+
+                    itemsString += `(${item.vendor}) ${qty}x ${item.name} [Mods: ${modString || 'None'}]; `;
+                    vendorSet.add(item.vendor);
                 }
             }
             itemsString = itemsString.slice(0, -2);
             vendorsString = Array.from(vendorSet).join(', ');
             
             const orderDetails = {
+                orderId: orderId,
                 vendor: vendorsString, items: itemsString, name: name,
                 location: location, total: finalTotal, priority: priority, 
-                batchTime: currentBatchName
+                batchTime: currentBatchName,
+                paymentSender: paymentSender 
             };
 
             fetch(GOOGLE_SCRIPT_URL, { 
@@ -428,14 +1561,39 @@
                 if (data.result === 'success') {
                     cart = {};
                     updateFloatingCart();
+                    
+                    // Generate WhatsApp URL with order details
+                    const whatsappMessage = encodeURIComponent(
+                        `Hi, I have placed Order #${data.orderId} from Beelivery and transferred Rp ${finalTotal.toLocaleString('id-ID')} from ${paymentSender}. \n\nI am sending the payment proof now!`
+                    );
+                    const whatsappUrl = `https://wa.me/+6281328097288?text=${whatsappMessage}`;
+
+
                     renderPage(`
                         <div class="success-screen">
                             <div class="icon">🎉</div>
-                            <h2 class="page-title">Order Submitted!</h2>
-                            <p class="page-subtitle" style="margin-bottom: 24px;">Your order (#${data.orderId}) has been sent to our team.</p>
-                            <a href="https://wa.me/+6281110002171" class="button secondary" target="_blank">Contact Support</a>
-                            <button class="button" onclick="initializeApp()">Place Another Order</button>
+                            <h2 class="page-title">Transfer Details Received!</h2>
+                            <p class="page-subtitle" style="margin-bottom: 24px;">
+                                Your Order ID is: <strong>#${data.orderId}</strong>
+                                <br>
+                                <span style="font-size:14px; color:var(--urgent-color); font-weight: 700;">
+                                    YOUR ORDER IS NOT YET CONFIRMED.
+                                </span>
+                            </p>
+                            
+                            <p style="text-align: center; margin-bottom: 20px;">
+                                <strong>IMPORTANT:</strong><br>Click the button below to send your payment proof (screenshot/receipt) via WhatsApp.
+                                <br>
+                                This is required to finalize your order.
+                            </p>
+                            
+                            <a href="${whatsappUrl}" class="button" target="_blank" 
+                                style="background-color: #25D366; margin-bottom: 12px;">
+                                📲 Send Payment Proof (WhatsApp)
+                            </a>
+                            <button class="button secondary" onclick="initializeApp()">Place Another Order</button>
                         </div>`);
+
                 } else { throw new Error(data.message || 'An unknown error in the script.'); }
             })
             .catch(error => {
@@ -448,36 +1606,114 @@
             const status = getCurrentBatchStatus();
 
             if (status.state === "OPEN") {
-                // Set the global variable
                 currentBatchName = status.batchName;
-
                 updateFloatingCart();
-                renderVendorList(status.batchName, status.closesIn);
-            } else {
-                renderStoreClosed(status.nextBatchName, status.opensIn);
+                renderVendorList(status.batchName, status.targetTime);
+            } 
+            else if (status.state === "EXPRESS_GAP") {
+                currentBatchName = "Express Gap";
+                updateFloatingCart(true); 
+                renderStoreClosed(status.nextBatchName, status.targetTime, status.state);
+            }
+            else {
+                // AFTER_HOURS (Hard Closed)
+                currentBatchName = "Store Closed";
+                renderStoreClosed(status.nextBatchName, status.targetTime, status.state);
             }
         }
 
-        function renderStoreClosed(nextBatchName, opensIn) {
-            let message = `Ordering for the next batch (${nextBatchName}) opens in ${opensIn}.`;
-            if (opensIn === "Tomorrow") {
-                message = `We are closed for the day. Ordering for ${nextBatchName} opens tomorrow.`;
-            }
+        function renderStoreClosed(nextBatchName, targetTime, state) {
+            if(countdownInterval) clearInterval(countdownInterval);
+
+            const isHardClosed = state === "AFTER_HOURS";
+            const isExpressGap = state === "EXPRESS_GAP";
+
+            let headerText, timerLabel, boxClass, expressButton = '';
+            let isTomorrow = (targetTime === "TOMORROW");
+            
+            if (isHardClosed) {
+                // 1. HARD CLOSED (12 PM to 9 AM)
+                boxClass = "closed";
+                headerText = "We're Closed for the Day"; 
+                timerLabel = `
+                    <div style="text-align: center;">
+                        <p style="margin: 0; font-size: 14px; line-height: 1.5; margin-bottom: 12px;"><strong>Our operating hours are 9:00 AM to 12:00 PM.</strong></p>
+                        <p style="margin: 0; font-size: 14px; margin-bottom: 8px;">Opens in</p>
+                    </div>
+                `;
+                expressButton = ''; 
+            } else if (isExpressGap) {
+                // 2. EXPRESS GAP (Between batches, 9 AM to 12 PM)
+                boxClass = "express-only";
+                
+                if (targetTime === "12:00") {
+                    headerText = "Final Express Slot of the Day! 🚀";
+                    timerLabel = `<p style="margin: 0; font-size: 14px; font-weight: 600;">Express service closes in</p>`;
+                } else {
+                    headerText = "Batch Closed. Express Available! 🚀";
+                    timerLabel = `<p style="margin: 0; font-size: 14px; font-weight: 600;">Next batch (${nextBatchName}) opens in</p>`;
+                }
+                
+                let itemCount = 0;
+                for (const name in cart) { itemCount += cart[name].quantity; }
+
+                if (itemCount > 0) {
+                     expressButton = `
+                        <div class="emergency-order-box" style="
+                            background-color: #FFF3E0; 
+                            border-color: var(--primary-dark);
+                            margin-bottom: 32px;
+                        ">
+                            <h4 style="color: var(--primary-dark);">Express Available Now!</h4>
+                            <p style="font-size: 14px; margin-top: 4px; color: var(--text-color);">
+                                Standard/Priority queues are closed.<br>Order ASAP with <strong>Express Anytime</strong>.
+                            </p>
+                            <button class="button" 
+                                    onclick="renderCheckout(true)" 
+                                    style="background-color: var(--urgent-color); color: white; margin-top: 15px;">
+                                Order Express (+Rp ${DELIVERY_FEES.Express.toLocaleString('id-ID')})
+                            </button>
+                        </div>
+                    `;
+                }
+            } 
             
             let content = `
-                <div class="page-title">We're Currently Closed</div>
-                <div class="page-subtitle">${message}</div>
-                <p style="text-align: center; margin-bottom: 30px;">(You can still browse the menus below)</p>
+                <!-- 1. The main page title (ONLY instance of "We're Closed for the Night") -->
+                <div class="page-title">${headerText}</div> 
+                
+                <div class="status-container ${boxClass}">
+                    <!-- 2. Conditionally show the status-header inside the box ONLY when NOT hard closed -->
+                    ${!isHardClosed ? `<div class="status-header">${headerText}</div>` : ''}
+                    ${timerLabel}
+                    <!-- Updated to show loading for all countdowns -->
+                    <div id="live-timer" class="countdown-timer-display">Loading...</div>
+                </div>
+                <!-- END STATUS UI -->
+                
+                <p style="text-align: center; margin-bottom: ${expressButton ? '16px' : '30px'};">(You can still browse the menus below)</p>
             `;
-            
+
+            content += expressButton; 
+
             vendors.forEach(vendor => {
+                // Only disable vendors if it's AFTER_HOURS (Hard closed)
+                const isDisabled = isHardClosed; 
                 content += `
-                    <div class="vendor-card" onclick="renderMenu('${vendor.name}', true)"> 
+                    <div class="vendor-card" onclick="renderMenu('${vendor.name}', ${isDisabled})"> 
                         <img src="${vendor.imageUrl}" alt="${vendor.name}">
                         <div class="info"><h3>${vendor.name}</h3><p>${vendor.category}</p></div>
                     </div>`;
             });
             renderPage(content);
+            
+            // NEW LOGIC: Start countdown if hard closed (09:00 tomorrow) OR if in an express gap.
+            if (isExpressGap) {
+                startLiveCountdown(targetTime, isTomorrow);
+            } else if (isHardClosed) {
+                 // Hard closed state needs a countdown to 09:00 AM tomorrow
+                 startLiveCountdown("09:00", true); 
+            }
         }
 
         window.onload = initializeApp;
