@@ -613,10 +613,11 @@
                 const targetDate = new Date(now);
                 targetDate.setHours(targetH, targetM, 0, 0);
 
-                if (isTomorrow || targetDate < now) {
-                    if (targetDate < now || isTomorrow) {
-                        targetDate.setDate(targetDate.getDate() + 1);
-                    }
+                // FIX: We removed the "|| targetDate < now" check here.
+                // We only add a day if we are explicitly told it is for tomorrow.
+                // Otherwise, if the time has passed, we want the diff to be negative so the timer hits 0 and refreshes.
+                if (isTomorrow) {
+                    targetDate.setDate(targetDate.getDate() + 1);
                 }
                 
                 targetDate.setSeconds(0, 0); 
