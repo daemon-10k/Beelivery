@@ -502,13 +502,14 @@
 
         // --- CORE OPERATING HOURS ---
         const STORE_OPEN_HOUR = 9 * 60;  // 9:00 AM in minutes
-        const STORE_CLOSE_HOUR = 12 * 60; // 12:00 PM in minutes
+        const STORE_CLOSE_HOUR = 13 * 60; // 1:00 PM in minutes
         
         // --- BATCH SCHEDULE ---
         const batchSchedule = [
             { batchName: "Early Bird ☀️ (9:00 AM)", orderStart: "09:00", orderEnd: "09:30" },
             { batchName: "Mid-Morning ☕ (10:00 AM)", orderStart: "10:00", orderEnd: "10:30" },
             { batchName: "Lunch Prep 🍚 (11:00 AM)", orderStart: "11:00", orderEnd: "11:30" },
+            { batchName: "Last Call 🏁 (12:00 PM)", orderStart: "12:00", orderEnd: "12:30" },
         ];
         
         // Custom delivery fees (Service Fee + Priority/Express Fee)
@@ -573,7 +574,7 @@
                 }
             }
             
-            // 4. We are after the very last batch's end time (11:30) but before store closing (12:00)
+            // 4. We are after the very last batch's end time (12:30) but before store closing (13:00)
             const lastBatch = batchSchedule[batchSchedule.length - 1];
             const [lastEndH, lastEndM] = lastBatch.orderEnd.split(':').map(Number);
             const lastEndTime = lastEndH * 60 + lastEndM;
@@ -582,7 +583,7 @@
                  return {
                     state: "EXPRESS_GAP",
                     nextBatchName: "Closing Time ⏰", 
-                    targetTime: "12:00" 
+                    targetTime: "13:00" 
                 };
             }
             
@@ -799,7 +800,7 @@
                 vendor: 'Dapur Penyet'
             },
             { 
-                name: 'Nilai Goreng + Nasi', 
+                name: 'Nila Goreng + Nasi', 
                 options: [
                     { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
                         choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
@@ -807,7 +808,7 @@
                 vendor: 'Dapur Penyet'
             },
             { 
-                name: 'Nilai Bakar + Nasi', 
+                name: 'Nila Bakar + Nasi', 
                 options: [
                     { name: 'Sambal Selection', type: 'checkbox', required: true, minSelections: 1, maxSelections: 1, 
                         choices: ['Sambal Merah', 'Sambal Ijo', 'Sambal Matah'] }
@@ -1433,7 +1434,7 @@
                     <p style="margin-top: 0; color: var(--text-secondary-color);">Please transfer the <strong>Exact Total</strong> to:</p>
                     
                     <img src="qris.jpeg" 
-                         style="width: 360px; height: 475px; margin: 10px 0; border-radius: 8px;">
+                         style="max-width: 100%; width: 360px; height: auto; margin: 10px auto; display: block; border-radius: 8px;">
                     
                     <p style="font-weight: 700; font-size: 18px; margin-bottom: 5px;">a.n. WILBERT, DIGITAL & KREATIF</p>
                     <p style="margin: 0;">MOHON CANTUMKAN NAMA PENGIRIM di kolom keterangan transfer</p>
@@ -1647,21 +1648,21 @@
             let isTomorrow = (targetTime === "TOMORROW");
             
             if (isHardClosed) {
-                // 1. HARD CLOSED (00:00-09:00 OR 12:00-23:59)
+                // 1. HARD CLOSED (00:00-09:00 OR 13:00-23:59)
                 boxClass = "closed";
                 headerText = "We're Closed"; 
                 timerLabel = `
                     <div style="text-align: center;">
-                        <p style="margin: 0; font-size: 14px; line-height: 1.5; margin-bottom: 12px;"><strong>Our operating hours are 9:00 AM to 12:00 PM.</strong></p>
+                        <p style="margin: 0; font-size: 14px; line-height: 1.5; margin-bottom: 12px;"><strong>Our operating hours are 9:00 AM to 1:00 PM.</strong></p>
                         <p style="margin: 0; font-size: 14px; margin-bottom: 8px;">Opens in</p>
                     </div>
                 `;
                 expressButton = ''; 
             } else if (isExpressGap) {
-                // 2. EXPRESS GAP (Between batches, 9 AM to 12 PM)
+                // 2. EXPRESS GAP (Between batches, 9 AM to 1 PM)
                 boxClass = "express-only";
                 
-                if (targetTime === "12:00") {
+                if (targetTime === "13:00") {
                     headerText = "Final Express Slot of the Day! 🚀";
                     timerLabel = `<p style="margin: 0; font-size: 14px; font-weight: 600;">Express service closes in</p>`;
                 } else {
